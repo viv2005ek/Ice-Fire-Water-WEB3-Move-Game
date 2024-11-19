@@ -174,7 +174,6 @@ function App() {
 
   const handeTranstion = async (payload: InputTransactionData) => {
     if (!account) return;
-    setLoading(true);
 
     try {
       const tx = await signAndSubmitTransaction(payload);
@@ -203,7 +202,6 @@ function App() {
     } catch (error) {
       console.log("Error", error);
     } finally {
-      setLoading(false);
     }
   };
 
