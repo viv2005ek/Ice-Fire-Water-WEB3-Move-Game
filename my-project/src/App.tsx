@@ -13,8 +13,8 @@ const client = new Aptos(aptosConfig);
 
 const GameWrapper1 = () => {
   return (
-    <div className="h-screen flex flex-col justify-center items-center bg-gradient-to-r from-blue-400 to-purple-600">
-      <div className="text-4xl font-extrabold text-white drop-shadow-lg animate-pulse">
+    <div className="h-screen flex flex-col justify-center items-center bg-gray-100">
+      <div className="text-4xl font-semibold text-gray-800">
         Please connect your wallet to continue
       </div>
     </div>
@@ -28,32 +28,29 @@ const GameWrapper2 = ({
   userSelection,
   computerSelection,
   result,
-  userWins,
-  userLosses,
-  userDraws,
+  userStats,
 }: {
   gameState: boolean;
   toggleGameState: () => void;
   handleMove: (move: string) => void;
   userSelection: string;
-  computerSelection: string;
   result: string;
-  userWins: number;
-  userLosses: number;
-  userDraws: number;
+  computerSelection: string;
+  userStats: { win: number; lose: number; draw: number };
 }) => {
   return (
-    <div className="h-screen flex flex-col justify-center items-center bg-gradient-to-r from-teal-300 to-indigo-600">
+    <div className="h-screen flex flex-col justify-center items-center bg-gradient-to-b from-blue-600 via-purple-700 to-pink-500 animate-gradient">
       <div className="w-4/5">
         <div className="flex justify-center">
           <button
             onClick={toggleGameState}
-            className="bg-green-600 text-white font-bold px-8 py-3 rounded-lg my-4 hover:bg-green-500 transition shadow-lg transform hover:scale-105">
+            className="bg-green-600 text-white font-semibold px-8 py-3 rounded-lg my-4 hover:bg-green-500 transition">
             {gameState ? "Stop Game" : "Start Game"}
           </button>
         </div>
         <div className="grid grid-cols-2 gap-4">
-          <div className="bg-white shadow-xl rounded-lg p-6 transform hover:scale-105 transition">
+          {/* User Move */}
+          <div className="bg-white shadow-lg rounded-lg p-5">
             <div className="text-xl font-semibold text-center text-gray-800 mb-4">
               Select Your Move
             </div>
@@ -73,24 +70,25 @@ const GameWrapper2 = ({
                 <>
                   <button
                     onClick={() => handleMove("Ice")}
-                    className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-400 transition shadow-md">
+                    className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-400 transition">
                     Ice
                   </button>
                   <button
                     onClick={() => handleMove("Fire")}
-                    className="bg-orange-500 text-white px-6 py-3 rounded-lg hover:bg-orange-400 transition shadow-md">
+                    className="bg-orange-500 text-white px-6 py-3 rounded-lg hover:bg-orange-400 transition">
                     Fire
                   </button>
                   <button
                     onClick={() => handleMove("Water")}
-                    className="bg-teal-500 text-white px-6 py-3 rounded-lg hover:bg-teal-400 transition shadow-md">
+                    className="bg-teal-500 text-white px-6 py-3 rounded-lg hover:bg-teal-400 transition">
                     Water
                   </button>
                 </>
               )}
             </div>
           </div>
-          <div className="bg-white shadow-xl rounded-lg p-6 transform hover:scale-105 transition">
+          {/* Computer Move */}
+          <div className="bg-white shadow-lg rounded-lg p-5">
             <div className="text-xl font-semibold text-center text-gray-800 mb-4">
               Computer Move
             </div>
@@ -107,20 +105,22 @@ const GameWrapper2 = ({
             </div>
           </div>
         </div>
-        <div className="mt-6 text-center">
-          <div className="bg-green-500 text-white text-2xl font-extrabold py-3 px-6 rounded-lg shadow-lg">
+        {/* Game Result */}
+        <div className="mt-6">
+          <div className="bg-green-500 text-white text-2xl font-semibold py-3 px-6 rounded-lg text-center">
             Game Results: {result || "-"}
           </div>
         </div>
-        <div className="mt-6 flex justify-around">
-          <div className="text-white font-bold text-lg">
-            Wins: <span className="text-green-300">{userWins}</span>
+        {/* User Stats */}
+        <div className="mt-6 grid grid-cols-3 gap-4">
+          <div className="bg-blue-500 text-white text-lg font-semibold py-3 px-6 rounded-lg text-center">
+            Wins: {userStats.win}
           </div>
-          <div className="text-white font-bold text-lg">
-            Losses: <span className="text-red-300">{userLosses}</span>
+          <div className="bg-red-500 text-white text-lg font-semibold py-3 px-6 rounded-lg text-center">
+            Losses: {userStats.lose}
           </div>
-          <div className="text-white font-bold text-lg">
-            Draws: <span className="text-yellow-300">{userDraws}</span>
+          <div className="bg-yellow-500 text-white text-lg font-semibold py-3 px-6 rounded-lg text-center">
+            Draws: {userStats.draw}
           </div>
         </div>
       </div>
@@ -134,10 +134,8 @@ function App() {
   const [gameState, setGameState] = useState(false);
   const [userSelection, setUserSelection] = useState("");
   const [computerSelection, setComputerSelection] = useState("");
-]  const [result, setResult] = useState("");
-  const [userWins, setUserWins] = useState(0);
-  const [userLosses, setUserLosses] = useState(0);
-  const [userDraws, setUserDraws] = useState(0);
+  const [result, setResult] = useState("");
+  const [userStats, setUserStats] = useState({ win: 0, lose: 0, draw: 0 });
 
   async function toggleGameState() {
     setGameState(!gameState);
@@ -190,57 +188,42 @@ function App() {
 
       if (duelResult === "Win") {
         setResult("You win");
-        setUserWins((prev) => prev + 1);
+        setUserStats((prev) => ({ ...prev, win: prev.win + 1 }));
       } else if (duelResult === "Lose") {
         setResult("You lose");
-        setUserLosses((prev) => prev + 1);
+        setUserStats((prev) => ({ ...prev, lose: prev.lose + 1 }));
       } else {
         setResult("Draw");
-        setUserDraws((prev) => prev + 1);
+        setUserStats((prev) => ({ ...prev, draw: prev.draw + 1 }));
       }
       setComputerSelection(resultData.computer_selection.toString());
     } catch (error) {
       console.log("Error", error);
-    } finally {
     }
   };
 
   return (
-    <div className="relative w-full h-screen flex flex-col justify-center items-center bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500 animate-gradient-bg">
-      <style>
-        {`
-          @keyframes gradientAnimation {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-          }
-          .animate-gradient-bg {
-            background-size: 200% 200%;
-            animation: gradientAnimation 10s ease infinite;
-          }
-        `}
-      </style>
-      <div className="absolute right-4 top-4">
-        <WalletSelector />
+    <>
+      <div className="w-full h-screen flex flex-col justify-center items-center bg-gradient-to-b from-blue-600 via-purple-700 to-pink-500 animate-gradient">
+        <div className="absolute right-4 top-4">
+          <WalletSelector />
+        </div>
+        {connected ? (
+          <GameWrapper2
+            computerSelection={computerSelection}
+            result={result}
+            handleMove={handleMove}
+            userSelection={userSelection}
+            gameState={gameState}
+            toggleGameState={toggleGameState}
+            userStats={userStats}
+          />
+        ) : (
+          GameWrapper1()
+        )}
       </div>
-      {connected ? (
-        <GameWrapper2
-          computerSelection={computerSelection}
-          result={result}
-          handleMove={handleMove}
-          userSelection={userSelection}
-          gameState={gameState}
-          toggleGameState={toggleGameState}
-          userWins={userWins}
-          userLosses={userLosses}
-          userDraws={userDraws}
-        />
-      ) : (
-        GameWrapper1()
-      )}
-    </div>
+    </>
   );
-  
 }
 
 export default App;
