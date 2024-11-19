@@ -1,0 +1,13 @@
+[package]
+name = "IceFireWater"
+version = "1.0.0"
+authors = []
+[addresses]
+metaschool = "0x496fa09cb3f485f75ba07edbb668b619a994bbc3033d5e5799b43790457e10eb"
+std = "0x1"
+[dev-addresses]
+[dependencies.AptosFramework]
+git = "https://github.com/aptos-labs/aptos-core.git"
+rev = "mainnet"
+subdir = "aptos-move/framework/aptos-framework"
+[dev-dependencies]
