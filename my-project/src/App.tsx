@@ -134,8 +134,7 @@ function App() {
   const [gameState, setGameState] = useState(false);
   const [userSelection, setUserSelection] = useState("");
   const [computerSelection, setComputerSelection] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState("");
+]  const [result, setResult] = useState("");
   const [userWins, setUserWins] = useState(0);
   const [userLosses, setUserLosses] = useState(0);
   const [userDraws, setUserDraws] = useState(0);
